@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="buygamedto" type="buygame.buygameData"/>
+	<typeAlias type="gamevictory.victoryResultData" alias="vResultdto"/>
+	
+	<resultMap  id="dtoBuyGame" class="buygamedto">
+		<result property="num" column="num"/>
+		<result property="game" column="game"/>
+		<result property="type" column="type"/>
+		<result property="round" column="round"/>
+		<result property="start_date" column="start_date"/>
+		<result property="end_date" column="end_date"/>
+		<result property="result_date" column="result_date"/>
+		<result property="flag" column="flag"/>
+		<result property="league" column="league"/>
+	</resultMap>
+	<!-- 게임입력 -->
+	<insert id="inbuygame" parameterClass="buygamedto">
+	insert into buygame values(
+		buygame_seq.nextval,
+		#game#,
+		#type#,
+		#round#,
+		(to_date(#date_start#,'yyyymmddhh24mi')),
+		(to_date(#date_end#,'yyyymmddhh24mi')),
+		(to_date(#date_result#,'yyyymmddhh24mi')),		
+		#flag#,
+		#league#
+	)
+	</insert>
+	
+	
+	<!-- 게임일정확인  -->
+	<select id="selectbuygame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	select * from buygame where game=#game# order by round desc
+	</select>
+	<!-- 입력정보확인 -->
+	<select id="buyup" parameterClass="int" resultClass="buygamedto"><!--  값이 null일때 따로받기위해 맵으로 받음 -->
+		select * from buygame where num=#num#
+	</select>
+	<!-- 수정 --> 
+	<update id="buyupPro" parameterClass="buygamedto">
+	update buygame set
+		game = #game#,
+		type = #type#,
+		round = #round#,
+		start_date = (to_date(#date_start#,'yyyymmddhh24mi')),
+		end_date = (to_date(#date_end#,'yyyymmddhh24mi')),
+		result_date = (to_date(#date_result#,'yyyymmddhh24mi')),		
+		flag = #flag#,
+		league=#league#
+	where num=#num#
+	</update>
+	<!-- 삭제 -->
+   	<delete id="buydelPro" parameterClass="int">
+   		delete from buygame where num=#num#
+   	</delete>
+	<!-- 전체 마감게임보기  -->
+	<select id="endlistGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	<![CDATA[select * from buygame where flag=#end# or flag=#result# order by end_date desc]]>
+	</select>
+   	<!-- 마감게임보기  -->
+	<select id="endbuyGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	<![CDATA[select * from buygame where game=#game# and flag=#end# or game=#game# and flag=#result# order by end_date desc]]>
+	</select>
+	<!-- 전체에서 월별 -->
+	<select id="listGameall" parameterClass="buygamedto" resultMap="dtoBuyGame">
+		<![CDATA[select * from buygame where start_date >= to_date(#s_date#, 'yyyymmdd') and end_date < to_date(#e_date#, 'yyyymmdd') order by start_date desc]]>
+	</select>
+	<!--종목 월 전체 경기 출력  -->
+	<select id="listGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+		<![CDATA[select * from buygame where game=#game# order by start_date desc]]>
+	</select>
+	<!--종목 월별 경기 출력  -->
+	<select id="listMonthGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+		<![CDATA[select * from buygame where start_date >= to_date(#s_date#, 'yyyymmdd') and end_date < to_date(#e_date#, 'yyyymmdd')  
+    	and game=#game# order by start_date desc]]>
+	</select>
+	<!--종목 전체 출력  -->
+	<select id="listAllGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+		<![CDATA[select * from buygame order by start_date desc]]>
+	</select>
+	<!-- 전체 적중결과보기  -->
+	<select id="resultlistGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	<![CDATA[select * from buygame where flag=#result# order by end_date desc]]>
+	</select>
+   	<!-- 적중결과보기  -->
+	<select id="resultbuyGame" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	<![CDATA[select * from buygame where game=#game# and flag=#result# order by end_date desc]]>
+	</select>
+	<!-- 구매가능게임 프로토-->
+	<select id="ablebgProto" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	<![CDATA[select * from buygame where game=#proto# and start_date<sysdate and end_date>sysdate]]>
+	</select>
+	<!--토토 구매내역이 없을경우  -->
+	<select id="totoAble" parameterClass="buygamedto" resultMap="dtoBuyGame">
+	<![CDATA[select * from buygame where game=#toto# and start_date<sysdate and end_date>sysdate]]>
+	</select>
+		<!--총발매금액  -->
+	<select id="xCnt" parameterClass="int" resultClass="int">
+		select count(*) from gamebuy where turn2=#x#
+	</select>
+	<select id="yCnt" parameterClass="int" resultClass="int">
+		select count(*) from gamebuy where turn2=#y#
+	</select>
+	<select id="zCnt" parameterClass="int" resultClass="int">
+		select count(*) from gamebuy where turn2=#z#
+	</select>
+	<select id="vCnt" parameterClass="int" resultClass="int">
+		select count(*) from gamebuy where turn2=#v#
+	</select>
+	<select id="wCnt" parameterClass="int" resultClass="int">
+		select count(*) from gamebuy where turn2=#w#
+	</select>
+	<select id="xSum" parameterClass="int" resultClass="int">
+		select sum(price) from gamebuy where turn2=#x# and refund=0
+	</select>
+	<select id="ySum" parameterClass="int" resultClass="int">
+		select sum(price) from gamebuy where turn2=#y# and refund=0
+	</select>
+	<select id="zSum" parameterClass="int" resultClass="int">
+		select sum(price) from gamebuy where turn2=#z# and refund=0
+	</select>
+	<select id="vSum" parameterClass="int" resultClass="int">
+		select sum(price) from gamebuy where turn2=#v# and refund=0
+	</select>
+	<select id="wSum" parameterClass="int" resultClass="int">
+		select sum(price) from gamebuy where turn2=#w# and refund=0
+	</select>
+	<!--발매중을 발매마감으로 바꾸기-->
+	<update id="ableupinge" parameterClass="buygamedto">
+	<![CDATA[ update buygame set
+	flag= #end# where end_date<sysdate and flag=#ing#]]>
+	</update>
+	<!-- 발매예정을 발매중을 바꾸기 -->
+	<update id="ableupduei" parameterClass="buygamedto">
+	<![CDATA[update buygame set
+	flag=#ing# where start_date<sysdate and flag=#due#]]>
+	</update>
+
+	
+	<!-- 프로토 마감날짜 -->
+	<select id="EProGame" parameterClass="int" resultClass="java.util.Date">
+		select reg_date from game where num=#Gnum3#
+	</select>
+	<!-- 프로토 게임 rownum 가져오기 -->
+	<select id="EProR" parameterClass="int" resultClass="int">
+		select r from(select num,rownum r from
+    		(select * from game order by reg_date asc, num asc))where num=#Gnum3#
+	</select>
+	<!--프로토 결과발표  -->
+	<select id="EProResult" parameterClass="int" resultClass="java.util.Date">
+		select reg_date from(select reg_date,rownum r from
+    		(select * from game order by reg_date asc, num asc))where r=#r#
+	</select>
+	<!-- 해당회차 판별 -->
+	<select id="InProCount" parameterClass="int" resultClass="int">
+		select count(*) from game where turn1=#turn#
+	</select>
+	<!-- 토토 마감날짜 -->
+	<select id="EToGame" parameterClass="buygamedto" resultClass="java.util.Date">
+		select reg_date from game where league=#league# and num=#Gnum3#
+	</select>
+	<!-- 토토 게임 rownum 가져오기 -->
+	<select id="EToR" parameterClass="buygamedto" resultClass="int">
+		select r from(select league,num,rownum r from
+    		(select * from game where league=#league# order by reg_date asc, num asc))where num=#Gnum3#
+	</select>
+	<!--토토 결과발표  -->
+	<select id="EToResult" parameterClass="buygamedto" resultClass="java.util.Date">
+		select reg_date from(select league,reg_date,rownum r from
+    		(select * from game where league=#league# order by reg_date asc, num asc))where r=#r#
+	</select>
+	<!-- 토토 해당회차 판별 -->
+	<select id="InToCount" parameterClass="int" resultClass="int">
+		select count(*) from game where turn2=#turn#
+	</select>
+	<!-- 	프로토업데이트 -->
+	<update id="Proup" parameterClass="buygamedto">
+	<![CDATA[update game set turn1=#turn#, round1=#type# where num in (select num from(select num, turn1, round1, turn2, round2, rownum r from
+    (select * from game order by reg_date asc, num asc))where r>=#Gnum1# and r<#Gnum2#)]]>
+	</update>
+	<!-- 	토토업데이트 -->
+	<update id="Toup" parameterClass="buygamedto">
+	<![CDATA[update game set turn2=#turn#, round2=#type#, league=#league# where num in (select num from(select num, turn1, round1, turn2, round2, rownum r from
+    (select * from game where league=#league# order by reg_date asc, num asc))where r>=#Gnum1# and r<#Gnum2#)]]>
+	</update>
+	<!-- 07-30(다운) 승부식 일정(투표) 현황 (발매기간,발표일)-->
+	<select id="votedto" parameterClass="buygamedto" resultClass="buygamedto">
+		select *
+		from buygame
+		where type=#type# and round=#round#
+	</select>
+	
+	<select id="VicResultTrun" resultClass="buygamedto" parameterClass="buygamedto">
+		select *
+		from buygame
+		where flag=#flag# and game=#game#
+	</select>
+	
+	<select id="endlistGame2" resultClass="buygamedto">
+		select *
+		from buygame
+	</select>
+	
+	<update id="flag_result_update" parameterClass="vResultdto"> 
+		update buygame 
+		set flag=#flag# 
+		where type=#round2# and round=#turn2# 
+	</update>
+</sqlMap>

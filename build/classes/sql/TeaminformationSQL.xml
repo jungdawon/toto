@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="teaminfordto" type="board.dto.TeamInformationDTO" />
+ 		<resultMap id="teaminfordtoRes" class="teaminfordto">
+				<result property="num" column="num"/>
+				<result property="local" column="local"/>
+				<result property="subject" column="subject"/>
+				<result property="writer" column="writer"/>
+			    <result property="content" column="content"/>
+				<result property="pw" column="pw"/>
+				<result property="readcount" column="readcount"/>
+				<result property="reg" column="reg"/>
+
+		</resultMap>
+		
+
+
+
+
+
+
+
+
+</sqlMap>

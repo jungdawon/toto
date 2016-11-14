@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="gamedto" type="game.gameData" />
+	
+	<typeAlias alias="gameVictoryDto" type="gamevictory.gameVictoryData" />
+	
+	<typeAlias alias="victoryResultDto" type="gamevictory.victoryResultData" />
+	
+	<!-- 승,무,패 개인회원 이력  -->
+	<typeAlias alias="VictoryPricedto" type="gamevictory.victoryPriceData" />
+	
+	<!-- 리절트 맵 정의 -->
+  	<resultMap id="dtoGameRes" class="gamedto">
+  		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="flag" column="flag"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="awaysc" column="awaysc"/>
+	  	<result property="turn2" column="turn2"/>
+	  	<result property="reg_date" column="reg_date"/>
+	</resultMap>
+	<resultMap id="dtoGameResRecently" class="gamedto">
+  		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="flag" column="flag"/>
+	  	 <result property="league" column="league"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="awaysc" column="awaysc"/>
+	  	<result property="reg_date" column="reg_date"/>
+	</resultMap>
+	
+	
+		<!--맞대결 리절트 맵 정의 -->
+  	<resultMap id="MatchDtoGameRes" class="gamedto">
+  		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="flag" column="flag"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="awaysc" column="awaysc"/>
+	  	<result property="reg_date" column="reg_date"/>
+	</resultMap>
+	
+	<resultMap id="MatchDtoGameRes2" class="gamedto">
+  		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="flag" column="flag"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="awaysc" column="awaysc"/>
+	  	<result property="reg_date" column="reg_date"/>
+	  	<result property="win_rate" column="win_rate"/>
+	  	<result property="draw_rate" column="draw_rate"/>
+	  	<result property="lose_rate" column="lose_rate"/>
+	</resultMap>
+	
+	<!-- 프로토 리절트맵 정의 -->
+	<resultMap class="gamedto" id="Proto">
+		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="reg_date" column="reg_date"/>
+	  	<result property="win_rate" column="win_rate"/>
+	  	<result property="draw_rate" column="draw_rate"/>
+	  	<result property="lose_rate" column="lose_rate"/>
+	</resultMap>
+	<!-- 토토 리절트맵 정의 -->
+	<resultMap class="gamedto" id="Toto">
+		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="reg_date" column="reg_date"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	</resultMap>
+	
+	<!-- 팀정보리절트 -->
+	<resultMap id="teamdtoGameRes" class="gamedto">
+	  	<result property="home" column="home"/>
+	    <result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="hlpt" column="hlpt"/>
+	  	<result property="alpt" column="alpt"/>
+	  	<result property="win" column="w"/>
+	  	<result property="draw" column="d"/>
+	  	<result property="lose" column="l"/>
+	</resultMap>
+	
+	<!-- 승부식 경기결과 리스트  -->
+	<resultMap id="victoryGameRes" class="gamedto">
+		<result property="round2" column="round2"/>
+	    <result property="turn2" column="turn2"/>
+	    <result property="league" column="league"/>
+	</resultMap>
+	
+	<!-- 경기정보입력 -->
+	<insert id="insertG" parameterClass="gamedto">
+	insert into game(num,league,home,away,homept,awaypt,flag,homesc,awaysc,reg_date,win_rate,draw_rate,lose_rate)
+		values(
+		game_seq.nextval,
+		#league#,
+		#home#,
+		#away#,
+		#homept#,
+		#awaypt#,
+		#flag#,
+		#homesc#,
+		#awaysc#,
+		(to_date(#reg_date2#,'yyyymmddhh24mi')),
+		#win_rate#,
+		#draw_rate#,
+		#lose_rate#
+		
+	)
+	</insert>
+	<select id="listMonth" parameterClass="gamedto" resultMap="MatchDtoGameRes">
+		<![CDATA[select * from
+	(select num,league,home,away,homept,awaypt,flag,homesc,awaysc,reg_date,rownum r 
+	from (select * from game where reg_date >= to_date(#s_date#, 'yyyymmdd')
+		and reg_date < to_date(#e_date#, 'yyyymmdd') and league=#league# order by reg_date asc, num asc))
+			where r>=#startRow# and r <=#endRow# order by reg_date asc
+   ]]>
+   </select>
+   	<!-- 월별 경기일정 카운트 -->
+	<select id="listMonthCount" parameterClass="gamedto" resultClass="int">
+		<![CDATA[select count(*) from
+	(select num,league,home,away,homept,awaypt,flag,homesc,awaysc,reg_date,rownum r 
+	from (select * from game where reg_date >= to_date(#s_date#, 'yyyymmdd')
+		and reg_date < to_date(#e_date#, 'yyyymmdd') and league=#league# order by reg_date asc, num asc)) order by reg_date asc, num asc]]>
+	</select>
+	<!-- 팀&월별 경기일정-->
+	<select id="listTeam" parameterClass="gamedto" resultMap="MatchDtoGameRes">
+		<![CDATA[select * from
+		(select num,league,home,away,homept,awaypt,flag,homesc,awaysc,reg_date,rownum r
+		from (select * from game where reg_date >= to_date(#s_date#, 'yyyymmdd') and reg_date < to_date(#e_date#, 'yyyymmdd')  
+    	and league=#league# and home=#team# or reg_date >= to_date(#s_date#, 'yyyymmdd') and reg_date < to_date(#e_date#, 'yyyymmdd')  
+    	and league=#league# and away=#team# order by reg_date asc, num asc))
+    		where r>=#startRow# and r <=#endRow# order by reg_date asc, num asc]]>
+	</select>
+	<!-- 팀&월별 경기일정 카운트-->
+	<select id="listTeamCount" parameterClass="gamedto" resultClass="int">
+		<![CDATA[select count(*) from
+		(select num,league,home,away,homept,awaypt,flag,homesc,awaysc,reg_date,rownum r
+		from (select * from game where reg_date >= to_date(#s_date#, 'yyyymmdd') and reg_date < to_date(#e_date#, 'yyyymmdd')  
+    	and league=#league# and home=#team# or reg_date >= to_date(#s_date#, 'yyyymmdd') and reg_date < to_date(#e_date#, 'yyyymmdd')  
+    	and league=#league# and away=#team# order by reg_date asc, num asc))order by reg_date asc, num asc]]>
+	</select>
+	<!-- 경기입력정보확인 -->
+	<select id="matchInfo" parameterClass="int" resultMap="MatchDtoGameRes2"> <!-- 값이 null일때 따로받기위해 맵으로 받음 -->
+		select * from game where num=#num#
+	</select>
+	<!-- 경기정보수정&배당률입력 -->
+	<update id="matchInfoPro" parameterClass="gamedto">
+		update game set
+			league = #league#,
+			home = #home#,
+			away = #away#,
+			homept = #homept#,
+			awaypt =#awaypt#,
+			flag = #flag#,
+			homesc = #homesc#,
+			awaysc = #awaysc#,
+			reg_date = (to_date(#reg_date2#,'yyyymmddhh24mi')),
+			win_rate = #win_rate#,
+			draw_rate = #draw_rate#,
+			lose_rate = #lose_rate# where num=#num#
+   	</update>
+   	
+   	<delete id="matchDelPro" parameterClass="int">
+   		delete from game where num=#num#
+   	</delete>
+   	
+
+	
+	<!-- 회차입력 -->
+	<update id="roundUpdate1" parameterClass="gamedto">
+		<![CDATA[
+			update game set turn1=#turn1#,round1=#round1# 
+			where reg_date>#s_date# and reg_date<#e_date#
+		]]>
+	</update>
+
+	<update id="roundUpdate2" parameterClass="gamedto">
+		<![CDATA[
+			update game set turn2=#turn2#,round2=#round2# 
+			where reg_date>#s_date# and reg_date<#e_date#
+		]]>
+	</update>
+<!-- 프로토 경기출력 -->
+	<select id="protoList" parameterClass="gamedto" resultMap="Proto">
+		 select * 
+		 from game 
+		 where turn1=#turn# and round1=#round# order by num asc
+	 </select>
+<!-- 토토 경기출력 -->
+	<select id="totoList" parameterClass="gamedto" resultMap="Toto">
+	 	select * from game where turn2=#turn# and round2=#round# and league=#league#  order by num asc
+	</select>
+	
+	
+	
+		<!-- 맞대결 해당팀 정보만 -->
+	<select id="MatchList" parameterClass="gamedto" resultMap="MatchDtoGameRes">
+		<![CDATA[
+			select *
+			from game 
+			where league=#league# and 
+			flag=#flag# and 
+			(home=#home# or home=#away#) and (away=#home# or away=#away#)
+			order by reg_date desc  
+		]]>
+	</select>
+	<!-- 맞대결 최근 정보1건만 -->
+	<select id="RecentlyMatch" parameterClass="gamedto" resultMap="MatchDtoGameRes">
+		<![CDATA[
+			select *
+			from (select *
+			from (select *
+			from game where flag=#flag# and  league=#league# and(home=#home# or home=#away#) and (away=#home# or away=#away#) 
+			order by reg_date desc)) where rownum >= 1 and rownum <= 1 
+		]]>
+	</select>
+	
+	<!-- 맞대결 최근 정보5건만 -->
+	<select id="MatchList_5" parameterClass="gamedto" resultMap="MatchDtoGameRes">
+		<![CDATA[
+			select *
+			from (select *
+			from (select *
+			from game where flag=#flag# and (home=#home# or home=#away#) and (away=#home# or away=#away#) and league=#league#
+			order by reg_date desc)) where rownum >= 1 and rownum <= 5 
+		]]>
+	</select>
+	
+	<!-- 맞대결 전체팀 정보 -->
+	<select id="AllMatchList" parameterClass="gamedto" resultMap="MatchDtoGameRes">
+		<![CDATA[
+			select *
+			from game 
+			where flag=#flag# and league=#league# and (home=#home# or home=#away#) or 
+			flag=#flag# and league=#league# and (away=#home# or away=#away#)
+		]]>
+	</select>
+	<!-- 프로토 축구 매치 경기정보 5건 -->
+	<select id="soccerMatchList_5" parameterClass="gamedto" resultMap="dtoGameRes">
+		<![CDATA[
+			select *
+			from game 
+			where flag=#flag# and rownum >= 1 and rownum <= 5 
+			order by reg_date
+			]]>
+	</select>
+	
+	<!-- 프로토 축구 매치 경기정보 상세보기 -->
+	<select id="soccerMatchList_1" parameterClass="int" resultMap="dtoGameRes">
+		<![CDATA[
+			select *
+			from game 
+			where num=#num#
+			]]>
+	</select>
+	
+	<!-- 프로토 축구 승부식 경기정보 14건 -->
+	<select id="soccerVictory" parameterClass="gamedto" resultMap="dtoGameRes" >
+		select *
+		from game
+		where turn2=#turn# and league=#league# and round2=#round#
+		order by num
+	</select>
+	
+	<!-- 프로토 축구 승부식 경기정보 14건 결과등록page-->
+	<select id="soccerVictory2" parameterClass="gamedto" resultMap="dtoGameRes" >
+		select *
+		from game
+		where turn2=#turn2# and league=#league# and round2=#round2#
+		order by num
+	</select>
+	
+	<select id="VictoryVote" parameterClass="gameVictoryDto" resultMap="dtoGameRes" >
+		select *
+		from game
+		where turn2=#turn2# and league=#league#
+		order by num
+	</select>
+	
+		<!-- 팀정보  -->
+		<select id="teamscore" parameterClass="gamedto" resultMap="teamdtoGameRes" >
+			<![CDATA[select * from
+			(
+			select home, hwin+awin w from 
+			(select home ,count(*) hwin from game where (homesc=#w#) and league=#league# group by home),
+			(select away ,count(*) awin from game where (awaysc=#w#) and league=#league# group by away) where away = home
+			) a
+			left outer join
+			(
+			select home, hwin+awin d from 
+			(select home ,count(*) hwin from game where (homesc=#d#) and league=#league# group by home),
+			(select away ,count(*) awin from game where (awaysc=#d#) and league=#league# group by away) where away = home
+			) b on a.home = b.home left outer join
+			(
+			select home, hwin+awin l from 
+			(select home ,count(*) hwin from game where (homesc=#l#) and league=#league# group by home),
+			(select away ,count(*) awin from game where (awaysc=#l#) and league=#league# group by away) where away = home
+			) c on a.home = c.home left outer join 
+			(
+			select * from (select away, sum(awaypt) awaypt from game where league=#league# group by away) h ,
+			(select home, sum(homept) homept from game where league=#league# group by home) a where away = home
+			) d on a.home = d.home left outer join 
+			(
+			select * from (select away, sum(homept) alpt from game where league=#league# group by away) h ,
+			(select home, sum(awaypt) hlpt from game where league=#league# group by home) a where away = home
+			) e on a.home = e.home order by w*3+d desc]]>
+		</select>
+			<!-- 원정 홈 팀정보-->
+		<select id="indiviteamscore" parameterClass="gamedto" resultClass="gamedto">
+			select * from 
+			(select home, count(*) hwin from game where homesc=#w# group by home) a
+			left outer join
+			(select home, count(*) hdraw from game where homesc=#d# group by home) b
+			on a.home = b.home left outer join
+			(select home, count(*) hlose from game where homesc=#l# group by home) c
+			on a.home = c.home left outer join
+			(select away, count(*) awin from game where awaysc=#w# group by away) d
+			on a.home = d.away left outer join
+			(select away, count(*) adraw from game where awaysc=#d# group by away) e
+			on a.home = e.away left outer join
+			(select away, count(*) alose from game where awaysc=#l# group by away) f
+			on a.home = f.away left outer join 
+			(
+			select * from (select away, sum(awaypt) awaypt from game group by away) h,
+			(select home, sum(homept) homept from game group by home) a where away = home
+			) g on a.home = g.home left outer join 
+			(
+			select * from (select away, sum(homept) alpt from game group by away) h ,
+			(select home, sum(awaypt) hlpt from game group by home) a where away = home
+			) i on a.home = i.home where home=#teamname#
+		</select>
+		<select id="recently" parameterClass="gamedto" resultMap="dtoGameResRecently">
+	   		 <!-- 최근 5경기,10경기 -->
+	   		 <![CDATA[
+			select * from (select * from game where league=#league# and home=#teamname# and flag=#end#
+			or league=#league# and away=#teamname# and flag=#end# order by reg_date desc) where rownum<#snum#
+			]]>
+		</select>
+	
+
+		<!-- 순위 넘기기 -->
+		<select id="teamGrade" parameterClass="gamedto" resultClass="int">
+		<![CDATA[select r from 
+    (select home,rownum r from
+        (select * from
+			(
+			select home, hwin+awin w from 
+			(select home ,count(*) hwin from game where (homesc=#w#) and league=#league# group by home),
+			(select away ,count(*) awin from game where (awaysc=#w#) and league=#league# group by away) where away = home
+			) a
+			left outer join
+			(
+			select home, hwin+awin d from 
+			(select home ,count(*) hwin from game where (homesc=#d#) and league=#league# group by home),
+			(select away ,count(*) awin from game where (awaysc=#d#) and league=#league# group by away) where away = home
+			) b on a.home = b.home left outer join
+			(
+			select home, hwin+awin l from 
+			(select home ,count(*) hwin from game where (homesc=#l#) and league=#league# group by home),
+			(select away ,count(*) awin from game where (awaysc=#l#) and league=#league# group by away) where away = home
+			) c on a.home = c.home left outer join 
+			(
+			select * from (select away, sum(awaypt) awaypt from game where league=#league# group by away) h ,
+			(select home, sum(homept) homept from game where league=#league# group by home) a where away = home
+			) d on a.home = d.home left outer join 
+			(
+			select * from (select away, sum(homept) alpt from game where league=#league# group by away) h ,
+			(select home, sum(awaypt) hlpt from game where league=#league# group by home) a where away = home
+			) e on a.home = e.home order by w*3+d desc
+        ) order by w*3+d desc
+   ) where home=#teamname#]]>
+		</select>
+		
+		<!-- 08-07일 경기 결과 등록 1~14 select -->
+		<select id="numselect_1" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=1
+		</select>
+		
+		<select id="numselect_2" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=2
+		</select>
+		
+		<select id="numselect_3" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=3
+		</select>
+		
+		<select id="numselect_4" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=4
+		</select>
+		
+		<select id="numselect_5" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=5
+		</select>
+		
+		<select id="numselect_6" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=6
+		</select>
+		
+		<select id="numselect_7" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=7
+		</select>
+		
+		<select id="numselect_8" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=8
+		</select>
+		
+		<select id="numselect_9" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=9
+		</select>
+		
+		<select id="numselect_10" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=10
+		</select>
+		
+		<select id="numselect_11" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=11
+		</select>
+		
+		<select id="numselect_12" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=12
+		</select>
+		
+		<select id="numselect_13" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=13
+		</select>
+		
+		<select id="numselect_14" parameterClass="victoryResultDto" resultClass="int">
+			select num from (select num,rownum r
+   			 from (select num from game where league=#league# and turn2=#turn2# and round2=#round2# order by num ))
+   			 where r=14
+		</select>
+		
+		<!-- 경기 결과 14건 승,무,패 game테이블에 업데이트 -->
+		<update id="numberupdate" parameterClass="map">
+			update game set homesc=#numhome#,awaysc=#numaway#,flag=#flag# where num=#number#
+		</update>
+		
+		<!-- 구매내역 경기결과 확인 페이지 08-10  -->
+		<select id="game_result_List" parameterClass="VictoryPricedto" resultMap="dtoGameRes">
+			select *
+			from game
+			where turn2=#turn2#
+			order by num
+		</select>
+		
+		<select id="game_result_zzzz" parameterClass="int" resultClass="gamedto">
+			select *
+			from game
+			where num=#num#
+		</select>
+		
+</sqlMap>

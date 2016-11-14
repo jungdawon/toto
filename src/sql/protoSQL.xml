@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="protodto" type="proto.protoData" />
+	<typeAlias alias="protoAA" type="proto.protoAAData" />
+	<typeAlias alias="buygamePP" type="buygame.buygameData"/>
+	<typeAlias alias="gamedtoPP" type="game.gameData" />
+	<resultMap id="ProtoPP" class="gamedtoPP">
+		<result property="num" column="num"/>
+	  	<result property="league" column="league"/>
+	  	<result property="home" column="home"/>
+	  	<result property="away" column="away"/>
+	  	<result property="homept" column="homept"/>
+	  	<result property="awaypt" column="awaypt"/>
+	  	<result property="homesc" column="homesc"/>
+	  	<result property="reg_date" column="reg_date"/>
+	  	<result property="win_rate" column="win_rate"/>
+	  	<result property="draw_rate" column="draw_rate"/>
+	  	<result property="lose_rate" column="lose_rate"/>
+	</resultMap>
+	<resultMap  id="buyPP" class="buygamePP">
+		<result property="num" column="num"/>
+		<result property="game" column="game"/>
+		<result property="type" column="type"/>
+		<result property="round" column="round"/>
+		<result property="start_date" column="start_date"/>
+		<result property="end_date" column="end_date"/>
+		<result property="result_date" column="result_date"/>
+		<result property="flag" column="flag"/>
+		<result property="league" column="league"/>
+	</resultMap>
+		<resultMap  id="pBet" class="protodto">
+		<result property="game1" column="game1"/>
+		<result property="betr1" column="betr1"/>
+		<result property="game2" column="game2"/>
+		<result property="betr2" column="betr2"/>
+		<result property="game3" column="game3"/>
+		<result property="betr3" column="betr3"/>
+		<result property="game4" column="game4"/>
+		<result property="betr4" column="betr4"/>
+		<result property="game5" column="game5"/>
+		<result property="betr5" column="betr5"/>
+		<result property="game6" column="game6"/>
+		<result property="betr6" column="betr6"/>
+		<result property="game7" column="game7"/>
+		<result property="betr7" column="betr7"/>
+		<result property="game8" column="game8"/>
+		<result property="betr8" column="betr8"/>
+		<result property="game9" column="game9"/>
+		<result property="betr9" column="betr9"/>
+		<result property="game10" column="game10"/>
+		<result property="betr10" column="betr10"/>
+		<result property="productnum" column="productnum"/>
+	</resultMap>
+	<insert id="insertProto" parameterClass="protodto">
+		insert into protobet values(
+			protobet_seq.nextval,
+			#id#,
+			#type#,
+			#round#,
+			#game1#,
+			#betr1#,
+			#game2#,
+			#betr2#,
+			#game3#,
+			#betr3#,
+			#game4#,
+			#betr4#,
+			#game5#,
+			#betr5#,
+			#game6#,
+			#betr6#,
+			#game7#,
+			#betr7#,
+			#game8#,
+			#betr8#,
+			#game9#,
+			#betr9#,
+			#game10#,
+			#betr10#,
+			#bet#,
+			#exrate#,
+			#exprofits#,
+			#mcount#,
+			sysdate,
+			#productnum#,
+			#result#,
+			#refund#
+		)
+	</insert>
+	
+	<select id="cashCheck" parameterClass="String" resultClass="int">
+		select cash from member where id=#id#
+	</select>
+	
+	<update id="useCashProto" parameterClass="protodto">
+		update member set
+			cash=#useCash# where id=#id#
+	</update>
+	
+	<select id="sumRoundIdCheck" parameterClass="protodto" resultClass="int">
+	select count(*) from protobet where id=#id# and round=#round#
+	</select>
+	
+	<select id="sumRoundId" parameterClass="protodto" resultClass="int">
+	select sum(bet) from protobet where id=#id# and round=#round#
+	</select>
+	
+	<select id="protoListCount" parameterClass="gamedtoPP" resultClass="int">
+		 select count(*) 
+		 from game 
+		 where turn1=#turn# and round1=#round# order by num asc
+	</select>
+	
+	<select id="protoList2" parameterClass="gamedtoPP" resultMap="ProtoPP">
+		 select *
+		 from game 
+		 where turn1=#turn# and round1=#round# and league=#league# order by num asc
+	</select>
+	
+	<select id="protoListCount2" parameterClass="gamedtoPP" resultClass="int">
+		 select count(*) 
+		 from game 
+		 where turn1=#turn# and round1=#round# and league=#league#  order by num asc
+	</select>
+	<select id="protoResult" resultClass="protodto" >
+		select num,round,id,bet,to_char(reg_date,'YYYYMMDDHHMMSS') productnum
+		from protobet
+	</select>
+	<select id="endPro" parameterClass="protoAA" resultMap="buyPP">
+		select * from buygame where type=#type# and flag=#flag# order by end_date desc
+	</select>
+	<select id="endProCt" parameterClass="protoAA" resultClass="int">
+		select count(*) from buygame where type=#type# and flag=#flag# order by end_date desc
+	</select>
+	<select id="endProGame" parameterClass="protoAA" resultMap="ProtoPP">
+		select *
+		 from game 
+		 where turn1=#turn# and round1=#type# order by num asc
+	</select>
+	<update id="up1" parameterClass="protoAA">
+		update game set
+			homept=#homept1#,
+			awaypt=#awaypt1#,
+			flag=#flag#,
+			homesc=#homesc1#,
+			awaysc=#awaysc1# where num=#num1#
+	</update>
+	<update id="up2" parameterClass="protoAA">
+		update game set
+			homept=#homept2#,
+			awaypt=#awaypt2#,
+			flag=#flag#,
+			homesc=#homesc2#,
+			awaysc=#awaysc2# where num=#num2#
+	</update>
+	<update id="up3" parameterClass="protoAA">
+		update game set
+			homept=#homept3#,
+			awaypt=#awaypt3#,
+			flag=#flag#,
+			homesc=#homesc3#,
+			awaysc=#awaysc3# where num=#num3#
+	</update>
+	<update id="up4" parameterClass="protoAA">
+		update game set
+			homept=#homept4#,
+			awaypt=#awaypt4#,
+			flag=#flag#,
+			homesc=#homesc4#,
+			awaysc=#awaysc4# where num=#num4#
+	</update>
+	<update id="up5" parameterClass="protoAA">
+		update game set
+			homept=#homept5#,
+			awaypt=#awaypt5#,
+			flag=#flag#,
+			homesc=#homesc5#,
+			awaysc=#awaysc5# where num=#num5#
+	</update>
+	<update id="up6" parameterClass="protoAA">
+		update game set
+			homept=#homept6#,
+			awaypt=#awaypt6#,
+			flag=#flag#,
+			homesc=#homesc6#,
+			awaysc=#awaysc6# where num=#num6#
+	</update>
+	<update id="up7" parameterClass="protoAA">
+		update game set
+			homept=#homept7#,
+			awaypt=#awaypt7#,
+			flag=#flag#,
+			homesc=#homesc7#,
+			awaysc=#awaysc7# where num=#num7#
+	</update>
+	<update id="up8" parameterClass="protoAA">
+		update game set
+			homept=#homept8#,
+			awaypt=#awaypt8#,
+			flag=#flag#,
+			homesc=#homesc8#,
+			awaysc=#awaysc8# where num=#num8#
+	</update>
+	<update id="up9" parameterClass="protoAA">
+		update game set
+			homept=#homept9#,
+			awaypt=#awaypt9#,
+			flag=#flag#,
+			homesc=#homesc9#,
+			awaysc=#awaysc9# where num=#num9#
+	</update>
+	<update id="up10" parameterClass="protoAA">
+		update game set
+			homept=#homept10#,
+			awaypt=#awaypt10#,
+			flag=#flag#,
+			homesc=#homesc10#,
+			awaysc=#awaysc10# where num=#num10#
+	</update>
+	<update id="up11" parameterClass="protoAA">
+		update game set
+			homept=#homept11#,
+			awaypt=#awaypt11#,
+			flag=#flag#,
+			homesc=#homesc11#,
+			awaysc=#awaysc11# where num=#num11#
+	</update>
+	<update id="up12" parameterClass="protoAA">
+		update game set
+			homept=#homept12#,
+			awaypt=#awaypt12#,
+			flag=#flag#,
+			homesc=#homesc12#,
+			awaysc=#awaysc12# where num=#num12#
+	</update>
+	<update id="up13" parameterClass="protoAA">
+		update game set
+			homept=#homept13#,
+			awaypt=#awaypt13#,
+			flag=#flag#,
+			homesc=#homesc13#,
+			awaysc=#awaysc13# where num=#num13#
+	</update>
+	<update id="up14" parameterClass="protoAA">
+		update game set
+			homept=#homept14#,
+			awaypt=#awaypt14#,
+			flag=#flag#,
+			homesc=#homesc14#,
+			awaysc=#awaysc14# where num=#num14#
+	</update>
+	<update id="up15" parameterClass="protoAA">
+		update game set
+			homept=#homept15#,
+			awaypt=#awaypt15#,
+			flag=#flag#,
+			homesc=#homesc15#,
+			awaysc=#awaysc15# where num=#num15#
+	</update>
+	<update id="up16" parameterClass="protoAA">
+		update game set
+			homept=#homept16#,
+			awaypt=#awaypt16#,
+			flag=#flag#,
+			homesc=#homesc16#,
+			awaysc=#awaysc16# where num=#num16#
+	</update>
+	<update id="up17" parameterClass="protoAA">
+		update game set
+			homept=#homept17#,
+			awaypt=#awaypt17#,
+			flag=#flag#,
+			homesc=#homesc17#,
+			awaysc=#awaysc17# where num=#num17#
+	</update>
+	<update id="up18" parameterClass="protoAA">
+		update game set
+			homept=#homept18#,
+			awaypt=#awaypt18#,
+			flag=#flag#,
+			homesc=#homesc18#,
+			awaysc=#awaysc18# where num=#num18#
+	</update>
+	<update id="up19" parameterClass="protoAA">
+		update game set
+			homept=#homept19#,
+			awaypt=#awaypt19#,
+			flag=#flag#,
+			homesc=#homesc19#,
+			awaysc=#awaysc19# where num=#num19#
+	</update>
+	<update id="up20" parameterClass="protoAA">
+		update game set
+			homept=#homept20#,
+			awaypt=#awaypt20#,
+			flag=#flag#,
+			homesc=#homesc20#,
+			awaysc=#awaysc20# where num=#num20#
+	</update>
+	<select id="selectPbet" parameterClass="int" resultMap="pBet">
+		select * from protobet where round=#turn#
+	</select>
+	<update id="winPro" parameterClass="String">
+		update protobet set result=6 where productnum=#productnum#
+	</update>
+	<update id="losePro" parameterClass="String">
+		update protobet set result=5 where productnum=#productnum#
+	</update>
+	<select id="chkGame2" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+	</select>
+	<select id="chkGame3" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3#
+	</select>
+	<select id="chkGame4" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4#
+	</select>
+	<select id="chkGame5" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4# or num=#num5# and homesc=#homesc5#
+	</select>
+	<select id="chkGame6" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4# or num=#num5# and homesc=#homesc5# 
+			or num=#num6# and homesc=#homesc6#
+	</select>
+	<select id="chkGame7" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4# or num=#num5# and homesc=#homesc5# 
+			or num=#num6# and homesc=#homesc6# or num=#num7# and homesc=#homesc7#
+	</select>
+	<select id="chkGame8" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4# or num=#num5# and homesc=#homesc5# 
+			or num=#num6# and homesc=#homesc6# or num=#num7# and homesc=#homesc7# or num=#num8# and homesc=#homesc8#
+	</select>
+	<select id="chkGame9" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4# or num=#num5# and homesc=#homesc5# 
+			or num=#num6# and homesc=#homesc6# or num=#num7# and homesc=#homesc7# or num=#num8# and homesc=#homesc8# 
+			or num=#num9# and homesc=#homesc9#
+	</select>
+	<select id="chkGame10" parameterClass="protoAA" resultClass="int">
+		select count(*) from game where num=#num1# and homesc=#homesc1# or num=#num2# and homesc=#homesc2#
+			or num=#num3# and homesc=#homesc3# or num=#num4# and homesc=#homesc4# or num=#num5# and homesc=#homesc5# 
+			or num=#num6# and homesc=#homesc6# or num=#num7# and homesc=#homesc7# or num=#num8# and homesc=#homesc8# 
+			or num=#num9# and homesc=#homesc9# or num=#num10# and homesc=#homesc10#
+	</select>
+	<update id="buyGUp" parameterClass="protoAA">
+		update buygame set flag=#flag# where type=#type# and round=#turn# 
+	</update>
+	
+	<!-- 내가 결제한 게임 정보 가져오기 -->
+	<select id="proto_result_1" parameterClass="String" resultClass="protodto" >
+		select *
+		from protobet
+		where productnum=#productnum#
+	</select>
+</sqlMap>

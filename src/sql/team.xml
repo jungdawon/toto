@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+
+
+<typeAlias alias="teamdto" type="game.teamDTO" />
+
+		<!-- 리절트 맵 정의 -->
+	  	<resultMap id="teamdtoRes" class="teamdto">
+	  	
+		<result property="num" column="num"/>
+		<result property="hometown" column="hometown"/>
+		<result property="homeground" column="homeground"/>
+		<result property="coach" column="coach"/>
+	    <result property="grade" column="grade"/>
+		<result property="homepage" column="homepage"/>
+		<result property="logo" column="logo"/>
+		<result property="teamname" column="teamname"/>
+		</resultMap>
+		
+		<insert id="teaminsert" parameterClass="teamdto">
+		
+      		INSERT INTO teaminformation(
+      		num,
+      		hometown,
+      		homeground,
+      		coach,
+      		grade,
+      		homepage,
+      		logo,
+      		teamname
+
+      		) 
+      		
+      		VALUES (
+                	       teaminformation_seq.NEXTVAL,
+                	 		#hometown#,
+                	 		#homeground#,
+                         	#coach#,
+                         	#grade#,
+                         	#homepage#,
+                         	#logo#,
+							#teamname#
+                             )
+		</insert>
+		
+				<!-- 팀정보게시글 갯수 조회 -->
+		<select id="teamcount" resultClass="int" parameterClass="String">
+			select count(*) from teaminformation where teamname=#teamname#
+		</select>
+		
+			<!-- 팀 리스트 보여준다. -->
+			<select id="teamgetlist" resultMap="teamdtoRes" parameterClass="java.util.Map">
+			<![CDATA[
+					select num,hometown,homeground,coach,grade,homepage,logo,teamname 
+					from (select num,hometown,homeground,coach,grade,homepage,logo,teamname
+					from teaminformation where teamname=#teamname#)
+		]]>
+		</select>
+
+	     <!-- 수정할 팀 정보를 가져온다. -->
+	    <select id="teammodify"  resultMap="teamdtoRes" parameterClass="String">
+	    select * from teaminformation where teamname=#teamname#
+	    </select>
+	    
+	    	<!-- 팀 정보수정 완료 -->
+    	<update id="teamupdate" parameterClass="teamdto" >
+    	update teaminformation set hometown=#hometown#,homeground=#homeground#,
+    	coach=#coach#,grade=#grade#,homepage=#homepage#,logo=#logo#,teamname=#teamname# 
+    	where num=#num#
+	    	</update>
+	    	<!--팀정보 게시글 삭제 -->
+    	 <delete id="teamdelete" >
+			DELETE FROM teaminformation where teamname=#teamname#
+	   		 </delete>
+
+		
+</sqlMap>

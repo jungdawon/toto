@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="totoPurDto" type="gamevictory.victoryPriceData" />
+	<typeAlias alias="protoPurDto" type="proto.protoData" />
+	<typeAlias alias="purDto" type="purchase.purData" />
+	<resultMap id="totoPurRes" class="totoPurDto">
+  		<result property="num" column="num"/>
+  		<result property="round2" column="round2"/>
+  		<result property="turn2" column="turn2"/>
+  		<result property="id" column="id"/>
+  		<result property="productnum" column="productnum"/>
+  		<result property="price" column="price"/>
+  		<result property="result_rank" column="result_rank"/>
+  		<result property="result_price" column="result_price"/>
+	  	<result property="match_1"  column="match_1" />
+	  	<result property="match_2"  column="match_2" />
+	  	<result property="match_3"  column="match_3" />
+	  	<result property="match_4"  column="match_4" />
+	  	<result property="match_5"  column="match_5" />
+	  	<result property="match_6"  column="match_6" />
+	  	<result property="match_7"  column="match_7" />
+	  	<result property="match_8"  column="match_8" />
+	  	<result property="match_9"  column="match_9" />
+	  	<result property="match_10" column="match_10"/>
+	  	<result property="match_11" column="match_11"/>
+	  	<result property="match_12" column="match_12"/>
+	  	<result property="match_13" column="match_13"/>
+	  	<result property="match_14" column="match_14"/>
+	  	<result property="price_date" column="price_date"/>
+	  	<result property="league" column="league"/>
+	</resultMap>
+	<resultMap id="protoPurRes" class="protoPurDto">
+		<result property="num" column="num"/>
+  		<result property="id" column="id"/>
+  		<result property="type" column="type"/>
+  		<result property="round" column="round"/>
+  		<result property="game1" column="game1"/>
+  		<result property="betr1" column="betr1"/>
+  		<result property="game2" column="game2"/>
+  		<result property="betr2" column="betr2"/>
+	  	<result property="game3" column="game3"/>
+  		<result property="betr3" column="betr3"/>
+	  	<result property="game4" column="game4"/>
+  		<result property="betr4" column="betr4"/>
+	  	<result property="game5" column="game5"/>
+  		<result property="betr5" column="betr5"/>
+	  	<result property="game6" column="game6"/>
+	  	<result property="betr6" column="betr6"/>
+	  	<result property="game7" column="game7"/>
+  		<result property="betr7" column="betr7"/>
+	  	<result property="game8" column="game8"/>
+  		<result property="betr8" column="betr8"/>
+	  	<result property="game9" column="game9"/>
+  		<result property="betr9" column="betr9"/>
+	  	<result property="game10" column="game10"/>
+	  	<result property="betr10" column="betr10"/>
+  		<result property="bet" column="bet"/>
+  		<result property="exrate" column="exrate"/>
+	  	<result property="exprofits" column="exprofits"/>
+  		<result property="mcount" column="mcount"/>
+  		<result property="reg_date" column="reg_date"/>
+  		<result property="productnum" column="productnum"/>
+  		<result property="result" column="result"/>
+	</resultMap>
+	<resultMap id="purRes" class="purDto">
+		<result property="type" column="type"/>
+		<result property="round" column="round"/>
+		<result property="reg_date" column="reg_date"/>
+		<result property="productnum" column="productnum"/>
+		<result property="bet" column="bet"/>
+		<result property="status" column="status"/>
+		<result property="price" column="price"/>
+		<result property="refund" column="refund"/>
+	</resultMap>
+	
+	<select id="todayPur" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date>#today#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date>#today#))
+		order by reg_date desc]]>
+	</select>
+	<select id="aweekPur" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#aweek#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#aweek#))
+		order by reg_date desc]]>
+	</select>
+	<select id="fifPur" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#fifteen#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#fifteen#))
+		order by reg_date desc]]>
+	</select>
+	<select id="amonthPur" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#amonth#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#amonth#))
+		order by reg_date desc]]>
+	</select>
+	<select id="monthsPur" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#months#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#months#))
+		order by reg_date desc]]>
+	</select>
+	<!-- 타입별 -->
+	<select id="todayPurType" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date>#today#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date>#today#))
+		where type=#typeSelect# order by reg_date desc]]>
+	</select>
+	<select id="aweekPurType" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#aweek#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#aweek#))
+		where type=#typeSelect# order by reg_date desc]]>
+	</select>
+	<select id="fifPurType" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#fifteen#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#fifteen#))
+		where type=#typeSelect# order by reg_date desc]]>
+	</select>
+	<select id="amonthPurType" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#amonth#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#amonth#))
+		where type=#typeSelect# order by reg_date desc]]>
+	</select>
+	<select id="monthsPurType" parameterClass="purDto" resultMap="purRes">
+		<![CDATA[select * from 
+		((select type, refund, round, reg_date, productnum, bet, result status, exprofits price 
+		from protobet a where id=#id# and reg_date<sysdate and reg_date>#months#)
+		union all
+		(select round2 type, refund, turn2 round, price_date reg_date, productnum, price bet, result_rank status, result_price price 
+		from gamebuy b where id=#id# and price_date<sysdate and price_date>#months#))
+		where type=#typeSelect# order by reg_date desc]]>
+	</select>
+</sqlMap>

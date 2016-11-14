@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings useStatementNamespaces="false" />
+	<sqlMap resource="/sql/gameMatchSQL.xml"/>
+	<sqlMap resource="/sql/gameSQL.xml"/>
+	<sqlMap resource="/sql/gameVictorySQL.xml"/>
+	<sqlMap resource="/sql/memberSQL.xml"/>
+	<sqlMap resource="/sql/paySQL.xml"/>
+	<sqlMap resource="/sql/boardSQL.xml"/>
+	<sqlMap resource="/sql/commentSQL.xml"/>
+	<sqlMap resource="/sql/protoSQL.xml"/>
+	<sqlMap resource="/sql/team.xml"/>
+	<sqlMap resource="/sql/victoryResultSQL.xml"/>
+	<sqlMap resource="/sql/buygameSQL.xml"/>
+	<sqlMap resource="/sql/repSQL.xml"/>
+	<sqlMap resource="/sql/purSQL.xml"/>
+	<sqlMap resource="/sql/purAdminSQL.xml"/>
+</sqlMapConfig>

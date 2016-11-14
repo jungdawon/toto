@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<!-- <bean id="controller" class="test.mvc.HelloController"/> 
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/0507/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean> -->
+
+	<context:component-scan base-package="game" />
+	<context:component-scan base-package="main" />
+	<context:component-scan base-package="gameMatch" />
+	<context:component-scan base-package="gamevictory" />
+	<context:component-scan base-package="member" />
+	<context:component-scan base-package="aegis.pgclient" />
+	<context:component-scan base-package="board.dto" />
+	<context:component-scan base-package="mvc.board" />
+	<context:component-scan base-package="proto" />
+	<context:component-scan base-package="team" />
+	<context:component-scan base-package="buygame" />
+	<context:component-scan base-package="admin" />
+	<context:component-scan base-package="purchase" />
+	
+		
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="-1"/> <!-- -1은 업로드 크기의 제한이 없음 무한대임 -->
+		<property name="defaultEncoding" value="EUC-KR"/>
+	</bean>
+	
+	<!-- ibatis 설정 -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation"   value="/WEB-INF/sqlMapConfig.xml"/>
+	</bean>
+	
+	<bean id="SqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource"
+                           destroy-method="close"
+                           p:driverClassName="oracle.jdbc.driver.OracleDriver"
+                           p:url="jdbc:oracle:thin:@192.168.0.3:1521/xe"
+                           p:username="bingsu12" p:password="900911"
+                           />
+	
+	</beans>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<!-- 승,무,패 카운트  -->
+	<typeAlias alias="VictoryResultdto" type="gamevictory.victoryResultData" />
+	
+	<!-- 승,무,패 카운트 리절트 맵 정의 -->
+  	<resultMap id="VictoryResultRes" class="VictoryResultdto">
+  		<result property="num" column="num"/>
+  		<result property="turn2" column="turn2"/>
+	  	<result property="match_1"  column="match_1" />
+	  	<result property="match_2"  column="match_2" />
+	  	<result property="match_3"  column="match_3" />
+	  	<result property="match_4"  column="match_4" />
+	  	<result property="match_5"  column="match_5" />
+	  	<result property="match_6"  column="match_6" />
+	  	<result property="match_7"  column="match_7" />
+	  	<result property="match_8"  column="match_8" />
+	  	<result property="match_9"  column="match_9" />
+	  	<result property="match_10" column="match_10"/>
+	  	<result property="match_11" column="match_11"/>
+	  	<result property="match_12" column="match_12"/>
+	  	<result property="match_13" column="match_13"/>
+	  	<result property="match_14" column="match_14"/>
+	  	<result property="victory_date" column="victory_date"/>
+	  	<result property="league" column="league"/>
+	</resultMap>
+	
+	<!-- 해당회차에 경기 결과가 없을경우 insert -->
+	<insert id="victoryResultInsert" parameterClass="VictoryResultdto">
+		insert into victoryresult values(
+			 victoryresult_seq.nextval,
+			 #turn2#,
+			 #match_1#,
+			 #match_2#,
+			 #match_3#,
+			 #match_4#,
+			 #match_5#,
+			 #match_6#,
+			 #match_7#,
+			 #match_8#,
+			 #match_9#,
+			 #match_10#,
+			 #match_11#,
+			 #match_12#,
+			 #match_13#,
+			 #match_14#,
+			 sysdate,
+			 #league#
+		)
+	</insert>
+	
+	<!-- 해당회차에 경기 결과가 있을경우 update -->
+	<update id="victoryResultUpdate" parameterClass="VictoryResultdto">
+		update victoryresult 
+		set match_1=#match_1#,match_2=#match_2#,match_3=#match_3#,match_4=#match_4#,match_5=#match_5#,
+		match_6=#match_6#,match_7=#match_7#,match_8=#match_8#,match_9=#match_9#,match_10=#match_10#,
+		match_11=#match_11#,match_12=#match_12#,match_13=#match_13#,match_14=#match_14#
+		where turn2=#turn2# and league=#league#
+	</update>
+	
+	<!-- 경기 결과 등록 쿼리 (해당 회차에 리그가 있는지 카운트해서 0이면 insert 1이상이면 update) -->
+	<select id="resultcount" parameterClass="VictoryResultdto" resultClass="int">
+		select count(*) 
+		from victoryresult
+		where turn2=#turn2# and league=#league#
+	</select>
+	
+	<!-- 경기 결과를 조회해서 구매한 사람들의 등수와,금액을 업데이트 하기위해서 select -->
+	<select id="ResultList" parameterClass="VictoryResultdto" resultClass="VictoryResultdto">
+		select *
+		from victoryresult
+		where turn2=#turn2# and league=#league#
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="memberdto" type="member.memberData" />
+	<typeAlias alias="payDto" type="admin.payData" />
+	<typeAlias alias="VictoryPricedto" type="gamevictory.victoryPriceData" />
+	<typeAlias alias="cancelDto" type="member.cancelData" />
+	<!-- 
+	  	<resultMap id="cancelpayRes" class="cancelDto">
+			<result property="num" column="num"/>
+			<result property="id" column="id"/>
+			<result property="cancelprice" column="cancelprice"/>
+			<result property="cancel_date" column="cancel_date"/>
+		</resultMap> 
+	-->
+	<resultMap id="priceRes" class="memberdto">
+			<result property="id" column="id" />
+			<result property="cancelprice" column="cancelprice" />
+			<result property="flag" column="flag" />
+			<result property="cancel_date" column="cancel_date" />
+			<result property="bank" column="bank" />
+			<result property="name" column="name" />
+			<result property="phone1" column="phone1" />
+			<result property="phone2" column="phone2" />
+			<result property="phone3" column="phone3" />
+			<result property="cash" column="cash" />
+			<result property="account" column="account" />
+	</resultMap>
+		<!-- 리절트 맵 정의 -->
+		  	<resultMap id="dtoRes" class="memberdto">
+		  	<result property="id" column="id"/>
+		  	<result property="pw" column="pw"/>
+		  	<result property="name" column="name"/>
+		  	<result property="zip1" column="zip1"/>
+		  	<result property="zip2" column="zip2"/>
+		  	<result property="address1" column="address1"/>
+		  	<result property="address2" column="address2"/>
+		  	<result property="phone1" column="phone1"/>
+		  	<result property="phone2" column="phone2"/>
+		  	<result property="phone3" column="phone3"/>
+		  	<result property="mail1" column="mail1"/>
+		  	<result property="mail2" column="mail2"/>
+		  	<result property="bank" column="bank"/>
+		  	<result property="account" column="account"/>
+		  	<result property="cash" column="cash"/>
+		  	<result property="reg_date" column="reg_date"/>
+		</resultMap> 
+		<!-- 회원가입 -->
+		<insert id="insertM" parameterClass="memberdto">
+			insert into member values (
+				#id#,
+				#pw#,
+				#name#,
+				#zip1#,
+				#zip2#,
+				#address1#,
+				#address2#,
+				#phone1#,
+				#phone2#,
+				#phone3#,
+				#mail1#,
+				#mail2#,
+				#bank#,
+				#account#,
+				#cash#,
+				sysdate
+			)
+		</insert>
+		<!-- 비밀번호체크 -->
+		<select id="userCheck" parameterClass="String" resultClass="String">
+			select pw from member where id=#id# 
+		</select>
+		<!-- 로그인시 아이디체크& 아이디 중복확인 -->
+		<select id="idCheck" parameterClass="String" resultClass="int">
+			select count(*) from member where id=#id# 
+		</select>
+		<!-- 회원정보보기 -->
+		<select id="myInfor" parameterClass="String" resultClass="memberdto">
+			select * from member where id =#id#
+		</select>
+		<!-- 회원정보수정 -->
+		<update id="myInforPro" parameterClass="memberdto">
+    		 update member set
+    		 	pw = #pw#,
+				name = #name#,
+				zip1 = #zip1#,
+				zip2 = #zip2#,
+				address1 = #address1#,
+				address2 = #address2#,
+				phone1 = #phone1#,
+				phone2 = #phone2#,
+				phone3 = #phone3#,
+				mail1 = #mail1#,
+				mail2 = #mail2#,
+				bank = #bank#,
+				account = #account# where id=#id#
+   		</update>
+   		<!-- 회원정보삭제 -->
+   		<delete id="deleteM" parameterClass="String">
+   			delete from member where id=#id#
+   		</delete>
+   		<!-- 아이디찾기 -->
+   		<select id="findId" parameterClass="memberdto" resultClass="memberdto">
+   			select id, reg_date from member where 
+   				name=#name# 
+				and phone1=#phone1# 
+				and phone2=#phone2#
+				and phone3=#phone3#
+   		</select>
+   		<select id="findIdCheck" parameterClass="memberdto" resultClass="int">
+   			select count(*) from member where 
+   				name=#name# 
+				and phone1=#phone1# 
+				and phone2=#phone2#
+				and phone3=#phone3#
+   		</select>
+   		<!-- 비밀번호찾기 -->
+   		<select id="findPw" parameterClass="memberdto" resultClass="String">
+   			select pw from member where
+   			 	id=#id#
+   				and name=#name# 
+				and phone1=#phone1# 
+				and phone2=#phone2#
+				and phone3=#phone3#
+   		</select>
+   		<select id="findPwCheck" parameterClass="memberdto" resultClass="int">
+   			select count(*) from member where
+   			 	id=#id#
+   				and name=#name# 
+				and phone1=#phone1# 
+				and phone2=#phone2#
+				and phone3=#phone3#
+   		</select>
+   		
+   		<!-- 예치금 충전 업데이트 -->
+   		<update id="PayPlus" parameterClass="payDto">
+   			update member 
+   			set cash=cash+#price# 
+   			where id=#id# 
+   		</update>
+   		<!-- 승무패 구매 cash 업데이트 -->
+   		<update id="VicroryPrice" parameterClass="VictoryPricedto">
+   			update member
+   			set cash = cash - #price#
+   			where id=#id#
+   		</update>
+   		<!-- 예치금 출금 요청 -->
+   		<insert id="CancelInsert" parameterClass="cancelDto">
+   			insert into paycancel(
+   				num,
+   				id,
+   				cancelprice,
+   				flag,
+   				cancel_date,
+   				bank
+   			)values(
+   				paycancel_seq.nextval,
+   				#id#,
+   				#cancelprice#,
+   				#flag#,
+   				sysdate,
+   				#bank#
+   			)
+   		</insert>
+   		<!-- 출금 요청 할때 예치금 잔액에서 마이너스 처리 -->
+   		<update id="CancelUpdate" parameterClass="cancelDto">
+   			update member set cash = cash - #cancelprice# where id=#id#
+   		</update>
+   		<!-- 출금 요청 처리 했을떄 flag 1로 변경 -->
+   		<update id="PriceUpdate" parameterClass="int" >
+   			update paycancel set flag=1 where num=#num# 
+   		</update>
+   		
+   			<!--내역  조회 -->
+		<select id="cancelcount" resultClass="int">
+			select count(*) from paycancel where id=#id#
+		</select>
+   			<!-- 출금내역 -->
+   			<select id="cancelpaylist" resultClass="cancelDto" parameterClass="java.util.Map">
+  
+			<![CDATA[
+			      select num,id,cancelprice,cancel_date,bank,r
+			from (select num,id,cancelprice,cancel_date,bank,rownum r
+			from (select num,id,cancelprice,cancel_date,bank
+		from paycancel where id=#id# and cancel_date > #str# order by cancel_date desc)) 
+		where r >=#startRow# and r <=#endRow# 
+		]]>
+		</select>
+   		
+   		<!-- 출금 요청내역 가져오기 갯수 count-->
+   		<select id="PriceCount" resultClass="int" parameterClass="int" >
+   			select count(*)
+			from paycancel a,member b
+			where a.id = b.id and flag=#flag#
+   		</select>
+   		
+   		<!-- 출금 요청내역 가져오기-->
+   		<select id="price" resultClass="memberdto" parameterClass="java.util.Map" >
+   			<![CDATA[
+   			select id,cancelprice,flag,cancel_date,bank,name,phone1,phone2,phone3,cash,account,num,r
+			from (select id,cancelprice,flag,cancel_date,bank,name,phone1,phone2,phone3,cash,account,num,rownum r
+			from (select a.id id,a.cancelprice cancelprice,a.flag flag,a.cancel_date cancel_date,b.bank bank,
+			b.name name,b.phone1 phone1,b.phone2 phone2,b.phone3 phone3,b.cash cash,b.account account,a.num num
+			from paycancel a,member b where a.id = b.id and flag=#flag# order by cancel_date desc)) where r >=#startRow# and r <=#endRow#
+   			]]>
+   		</select>
+   		
+   		<!-- 회원관리 게시판 가져오기 -->
+   		<select id="adminmember" resultMap="dtoRes">
+   		select * from member
+   		</select>
+   		
+   		<!-- 회원관리 게시판 갯수 가져오기 -->
+   		<select id="membercount" resultClass="int">
+   		select count(*) from member
+   		</select>
+</sqlMap>
+

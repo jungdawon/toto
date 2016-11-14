@@ -1,0 +1,83 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<%@ include file="/game/subMenu.jsp" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%-- <c:if test="${top ne null}" >
+		<jsp:include page="${top}"/>
+</c:if> --%>
+<br />
+<br />
+<br />
+<style type="text/css">
+	#t1 {
+		position: relative;
+		left: 17%;
+		
+	}
+
+</style>
+<style type="text/css">
+#text	{
+
+	position: absolute;
+	top: 150px;
+	left: 120px;
+	width: 1150px;}
+</style>
+<div id="text">
+<table align="center"  width="750">
+<tr><td>
+<img src="/toto/teaminfomation/image/tit_soccer_01.gif" />&nbsp;&nbsp;
+<img src="/toto/teaminfomation/image/btn_teaminfo.gif" />&nbsp;&nbsp;
+<img src="/toto/teaminfomation/image/tit_txtSoccer.gif" /><br /><br />
+<font  size="5"color="#FF7012">KÅ¬·¡½Ä ¼øÀ§ 15½ÃÁð</font>
+</td></tr>
+</table>
+<br />
+
+ <table border="1" width=80% id="t1">
+  
+ <tr align=center bgcolor="#E7E7E7">
+	 <td rowspan=2>¼øÀ§</td>
+	 <td rowspan=2>ÆÀ¸í</td>
+	 <td rowspan=2>°æ±â¼ö</td>
+	 <td rowspan=2>½ÂÁ¡</td>
+	 <td rowspan=2>½Â</td>
+	 <td rowspan=2>¹«</td>
+	 <td rowspan=2>ÆÐ</td>
+	 <td colspan=2>µæÁ¡</td>
+	 <td colspan=2>½ÇÁ¡</td> 
+	 <td rowspan=2>µæ½Ç</td>
+ </tr>
+ <tr align=center bgcolor="#E7E7E7"> 
+	 <td>ÀüÃ¼</td>
+	 <td>Æò±Õ</td>
+	 <td>ÀüÃ¼</td>
+	 <td>Æò±Õ</td> 
+ <c:forEach var="teamscorelist" items="${teamscorelist}" varStatus="var">
+ </tr>
+	<tr align=center>
+	<td><font color="#FF7012">${var.count}</font></td>
+	<td style="text-decoration: underline;"><a style="color: #5AAEFF;" href="/toto/teaminfomation/teamcontent.to?teamname=${teamscorelist.home}&snum=${6}&league=K¸®±×">${teamscorelist.home}</a></td>
+	<td>${teamscorelist.win+teamscorelist.lose+teamscorelist.draw}</td>
+	<td>${teamscorelist.win*3+teamscorelist.draw}</td>
+	<td>${teamscorelist.win}</td>
+	<td>${teamscorelist.draw}</td>
+	<td>${teamscorelist.lose}</td>
+	<td>${teamscorelist.awaypt+teamscorelist.homept}</td>
+	<td><fmt:formatNumber value="${(teamscorelist.homept+teamscorelist.awaypt)/(teamscorelist.win+teamscorelist.lose+teamscorelist.draw)}" pattern="0.00" /></td>
+	<td>${teamscorelist.hlpt+teamscorelist.alpt}</td>
+	<td><fmt:formatNumber value="${(teamscorelist.alpt+teamscorelist.hlpt)/(teamscorelist.win+teamscorelist.lose+teamscorelist.draw)}" pattern="0.00" /></td>
+	<td>${(teamscorelist.homept+teamscorelist.awaypt)-(teamscorelist.hlpt+teamscorelist.alpt)}</td>
+	
+</tr>
+</c:forEach>
+
+ </table>
+<br />
+<table align="center" width="750">
+<tr><td><img src="/toto/teaminfomation/image/bottom.gif" /></td></tr>
+</table>	
+ 
+ </div>

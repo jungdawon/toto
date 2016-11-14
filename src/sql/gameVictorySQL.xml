@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<!-- 승,무,패 카운트  -->
+	<typeAlias alias="gameVictorydto" type="gamevictory.gameVictoryData" />
+	
+	<!-- 승,무,패 개인회원 이력  -->
+	<typeAlias alias="VictoryPricedto" type="gamevictory.victoryPriceData" />
+	
+	<!-- 승,무,패 결광 등록 -->
+	<typeAlias alias="VictoryResultdto" type="gamevictory.victoryResultData" />
+	
+	<!-- 승,무,패 카운트 리절트 맵 정의 -->
+  	<resultMap id="dtoGameVictoryRes" class="gameVictorydto">
+  		<result property="num" column="num"/>
+  		<result property="turn2" column="turn2"/>
+	  	<result property="match_1"  column="match_1" />
+	  	<result property="match_2"  column="match_2" />
+	  	<result property="match_3"  column="match_3" />
+	  	<result property="match_4"  column="match_4" />
+	  	<result property="match_5"  column="match_5" />
+	  	<result property="match_6"  column="match_6" />
+	  	<result property="match_7"  column="match_7" />
+	  	<result property="match_8"  column="match_8" />
+	  	<result property="match_9"  column="match_9" />
+	  	<result property="match_10" column="match_10"/>
+	  	<result property="match_11" column="match_11"/>
+	  	<result property="match_12" column="match_12"/>
+	  	<result property="match_13" column="match_13"/>
+	  	<result property="match_14" column="match_14"/>
+	  	<result property="victory_date" column="victory_date"/>
+	  	<result property="price" column="price"/>
+	</resultMap>
+	<!--  승,무,패 개인회원 이력 -->
+	<resultMap id="dtoVictoryPriceRes" class="VictoryPricedto">
+  		<result property="num" column="num"/>
+  		<result property="round2" column="round2"/>
+  		<result property="turn2" column="turn2"/>
+  		<result property="id" column="id"/>
+  		<result property="productnum" column="productnum"/>
+  		<result property="price" column="price"/>
+  		<result property="result_rank" column="result_rank"/>
+  		<result property="result_price" column="result_price"/>
+	  	<result property="match_1"  column="match_1" />
+	  	<result property="match_2"  column="match_2" />
+	  	<result property="match_3"  column="match_3" />
+	  	<result property="match_4"  column="match_4" />
+	  	<result property="match_5"  column="match_5" />
+	  	<result property="match_6"  column="match_6" />
+	  	<result property="match_7"  column="match_7" />
+	  	<result property="match_8"  column="match_8" />
+	  	<result property="match_9"  column="match_9" />
+	  	<result property="match_10" column="match_10"/>
+	  	<result property="match_11" column="match_11"/>
+	  	<result property="match_12" column="match_12"/>
+	  	<result property="match_13" column="match_13"/>
+	  	<result property="match_14" column="match_14"/>
+	  	<result property="price_date" column="price_date"/>
+	  	<result property="refund" column="refund" />
+	</resultMap>
+	
+	
+	<!-- 14경기 구매 카운트 테이블(관리자) -->
+	<insert id="soccerVictoryInsert" parameterClass="gameVictorydto">
+		insert into gamevictory values(
+			 gamevictory_seq.nextval,
+			 #turn2#,
+			 #match_1#,
+			 #match_2#,
+			 #match_3#,
+			 #match_4#,
+			 #match_5#,
+			 #match_6#,
+			 #match_7#,
+			 #match_8#,
+			 #match_9#,
+			 #match_10#,
+			 #match_11#,
+			 #match_12#,
+			 #match_13#,
+			 #match_14#,
+			 sysdate,	
+			 #price#,
+			 #league#
+		)
+	</insert>
+
+	<!-- 14경기 구매 카운트 테이블(업데이트)(관리자) -->
+	<update id="soccerVictoryUpdate" parameterClass="gameVictorydto">
+	<![CDATA[
+		update gamevictory
+		SET match_1 = (REGEXP_SUBSTR(match_1, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_1#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_1, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_1#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_1, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_1#, '[^,]+', 1, 3)),
+
+			  match_2 = (REGEXP_SUBSTR(match_2, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_2#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_2, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_2#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_2, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_2#, '[^,]+', 1, 3)),
+
+			  match_3 = (REGEXP_SUBSTR(match_3, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_3#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_3, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_3#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_3, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_3#, '[^,]+', 1, 3)),
+
+			  match_4 = (REGEXP_SUBSTR(match_4, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_4#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_4, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_4#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_4, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_4#, '[^,]+', 1, 3)),
+
+			  match_5 = (REGEXP_SUBSTR(match_5, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_5#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_5, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_5#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_5, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_5#, '[^,]+', 1, 3)),
+
+			  match_6 = (REGEXP_SUBSTR(match_6, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_6#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_6, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_6#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_6, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_6#, '[^,]+', 1, 3)),
+
+			  match_7 = (REGEXP_SUBSTR(match_7, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_7#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_7, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_7#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_7, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_7#, '[^,]+', 1, 3)),
+
+			  match_8 = (REGEXP_SUBSTR(match_8, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_8#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_8, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_8#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_8, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_8#, '[^,]+', 1, 3)),
+
+			  match_9 = (REGEXP_SUBSTR(match_9, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_9#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_9, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_9#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_9, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_9#, '[^,]+', 1, 3)),
+
+			  match_10 = (REGEXP_SUBSTR(match_10, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_10#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_10, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_10#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_10, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_10#, '[^,]+', 1, 3)),
+
+			  match_11 = (REGEXP_SUBSTR(match_11, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_11#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_11, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_11#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_11, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_11#, '[^,]+', 1, 3)),
+
+			  match_12 = (REGEXP_SUBSTR(match_12, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_12#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_12, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_12#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_12, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_12#, '[^,]+', 1, 3)),
+
+			  match_13 = (REGEXP_SUBSTR(match_13, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_13#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_13, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_13#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_13, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_13#, '[^,]+', 1, 3)),
+
+			  match_14 = (REGEXP_SUBSTR(match_14, '[^,]+', 1, 1) + REGEXP_SUBSTR(#match_14#, '[^,]+', 1, 1))
+              ||','|| (REGEXP_SUBSTR(match_14, '[^,]+', 1, 2) + REGEXP_SUBSTR(#match_14#, '[^,]+', 1, 2))
+              ||','|| (REGEXP_SUBSTR(match_14, '[^,]+', 1, 3) + REGEXP_SUBSTR(#match_14#, '[^,]+', 1, 3)),
+              
+              price = price+#price#
+              where turn2=#turn2# and league=#league#
+         ]]>
+	</update>
+	
+	<!-- 축구 승무패 개인 구매 이력 삽입 -->
+	<insert id="VictoryBuyInsert" parameterClass="VictoryPricedto">
+		insert into gamebuy values(
+			 gamebuy_seq.nextval,
+			 #round2#,
+			 #turn2#,
+			 #id#,
+			 #productnum#,
+			 #price#,
+			 #match_1#,
+			 #match_2#,
+			 #match_3#,
+			 #match_4#,
+			 #match_5#,
+			 #match_6#,
+			 #match_7#,
+			 #match_8#,
+			 #match_9#,
+			 #match_10#,
+			 #match_11#,
+			 #match_12#,
+			 #match_13#,
+			 #match_14#,
+			 sysdate,	
+			 #result_price#,
+			 #result_rank#,
+			 #league#,
+			 #refund#
+		)
+	</insert>
+	
+	
+	
+	<!-- 14경기 구매 카운트 업데이트 0건이면 insert 1건이상이면 update -->
+	<select id="insertcount" parameterClass="gameVictorydto" resultClass="int">
+		select count(*)
+		from gamevictory
+		where turn2 = #turn2# and league=#league#
+	</select>
+	
+	<select id="VictoryCount" parameterClass="gameVictorydto" resultClass="int">
+	<![CDATA[
+		select count(*)
+		from  gamevictory
+		where   
+		(match_1  = #match_1#  or substr(match_1,0,1) = #match_1#  or substr(match_1,3,4)=#match_1#  or substr(match_1,6,7)=#match_1# ) and
+		(match_2  = #match_2#  or substr(match_2,0,1) = #match_2#  or substr(match_2,3,4)=#match_2#  or substr(match_2,6,7)=#match_2# ) and
+		(match_3  = #match_3#  or substr(match_3,0,1) = #match_3#  or substr(match_3,3,4)=#match_3#  or substr(match_3,6,7)=#match_3# ) and
+		(match_4  = #match_4#  or substr(match_4,0,1) = #match_4#  or substr(match_4,3,4)=#match_4#  or substr(match_4,6,7)=#match_4# ) and
+		(match_5  = #match_5#  or substr(match_5,0,1) = #match_5#  or substr(match_5,3,4)=#match_5#  or substr(match_5,6,7)=#match_5# ) and
+		(match_6  = #match_6#  or substr(match_6,0,1) = #match_6#  or substr(match_6,3,4)=#match_6#  or substr(match_6,6,7)=#match_6# ) and
+		(match_7  = #match_7#  or substr(match_7,0,1) = #match_7#  or substr(match_7,3,4)=#match_7#  or substr(match_7,6,7)=#match_7# ) and
+		(match_8  = #match_8#  or substr(match_8,0,1) = #match_8#  or substr(match_8,3,4)=#match_8#  or substr(match_8,6,7)=#match_8# ) and
+		(match_9  = #match_9#  or substr(match_9,0,1) = #match_9#  or substr(match_9,3,4)=#match_9#  or substr(match_9,6,7)=#match_9# ) and
+		(match_10 = #match_10# or substr(match_10,0,1) = #match_10# or substr(match_10,3,4)=#match_10# or substr(match_10,6,7)=#match_10#) and
+		(match_11 = #match_11# or substr(match_11,0,1) = #match_11# or substr(match_11,3,4)=#match_11# or substr(match_11,6,7)=#match_11#) and
+		(match_12 = #match_12# or substr(match_12,0,1) = #match_12# or substr(match_12,3,4)=#match_12# or substr(match_12,6,7)=#match_12#) and
+		(match_13 = #match_13# or substr(match_13,0,1) = #match_13# or substr(match_13,3,4)=#match_13# or substr(match_13,6,7)=#match_13#) and
+		(match_14 = #match_14# or substr(match_14,0,1) = #match_14# or substr(match_14,3,4)=#match_14# or substr(match_14,6,7)=#match_14#)
+	]]>
+	</select>
+	
+	<select id="soccerVictoryVote" parameterClass="map" resultClass="gameVictorydto">
+		select *
+		from gamevictory
+		where turn2=#turn2# and league=#league#
+	</select>
+	
+	<select id="VictoryVoteCount" parameterClass="gameVictorydto" resultClass="int" >
+		select  sum(
+						REGEXP_SUBSTR(match_1, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_1,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_1,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_2, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_2,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_2,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_3, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_3,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_3,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_4, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_4,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_4,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_5, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_5,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_5,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_6, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_6,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_6,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_7, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_7,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_7,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_8, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_8,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_8,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_9, '[^,]+', 1, 1) +  REGEXP_SUBSTR(match_9,  '[^,]+', 1, 2) + REGEXP_SUBSTR(match_9,  '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_10, '[^,]+', 1, 1) + REGEXP_SUBSTR(match_10, '[^,]+', 1, 2) + REGEXP_SUBSTR(match_10, '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_11, '[^,]+', 1, 1) + REGEXP_SUBSTR(match_11, '[^,]+', 1, 2) + REGEXP_SUBSTR(match_11, '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_12, '[^,]+', 1, 1) + REGEXP_SUBSTR(match_12, '[^,]+', 1, 2) + REGEXP_SUBSTR(match_12, '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_13, '[^,]+', 1, 1) + REGEXP_SUBSTR(match_13, '[^,]+', 1, 2) + REGEXP_SUBSTR(match_13, '[^,]+', 1, 3) +
+						REGEXP_SUBSTR(match_14, '[^,]+', 1, 1) + REGEXP_SUBSTR(match_14, '[^,]+', 1, 2) + REGEXP_SUBSTR(match_14, '[^,]+', 1, 3)
+						) count
+						from gamevictory
+						where turn2 = #turn2# and league=#league#
+	</select>
+	<!-- 경기결과 1~4등,꽝 업데이트 -->
+	<select id="VictoryList" parameterClass="VictoryResultdto" resultClass="VictoryPricedto">
+		select *
+		from gamebuy
+		where turn2=#turn2# and league=#league#
+	</select>
+	
+	<!-- 14경기 적중(1등) -->
+	<update id="update_1" parameterClass="int" >
+		update gamebuy set result_rank=1 where num=#up#
+	</update>
+	<!-- 13경기 적중(2등) -->
+	<update id="update_2" parameterClass="int" >
+		update gamebuy set result_rank=2 where num=#up#
+	</update>
+	<!-- 12경기 적중(3등) -->
+	<update id="update_3" parameterClass="int" >
+		update gamebuy set result_rank=3 where num=#up#
+	</update>
+	<!-- 11경기 적중(4등) -->
+	<update id="update_4" parameterClass="int" >
+		update gamebuy set result_rank=4 where num=#up#
+	</update>
+	<!-- 꽝 -->
+	<update id="update_5" parameterClass="int" >
+		update gamebuy set result_rank=5 where num=#up#
+	</update>
+	<select id="totoResult" resultClass="VictoryPricedto">
+		select num,round2,turn2,id,price,to_char(price_date,'YYYYMMDDHHMMSS') productnum
+		from gamebuy
+	</select>
+	
+	<!-- 해당 회차 경기의 Total 금액 조회 -->
+	<select id="totalprice" parameterClass="VictoryResultdto" resultClass="int">
+		select price
+		from gamevictory
+		where turn2=#turn2# and league=#league#
+	</select>
+	
+	<!-- 해당 회차 경기의 1등 인원수 -->
+	<select id="number_1_count" parameterClass="VictoryResultdto" resultClass="int">
+		select count(*)
+		from gamebuy
+		where league=#league# and turn2=#turn2# and result_rank=1
+	</select>
+	
+	<!-- 해당 회차 경기의 2등 인원수 -->
+	<select id="number_2_count" parameterClass="VictoryResultdto" resultClass="int">
+		select count(*)
+		from gamebuy
+		where league=#league# and turn2=#turn2# and result_rank=2
+	</select>
+	
+	<!-- 해당 회차 경기의 3등 인원수 -->
+	<select id="number_3_count" parameterClass="VictoryResultdto" resultClass="int">
+		select count(*)
+		from gamebuy
+		where league=#league# and turn2=#turn2# and result_rank=3
+	</select>
+	
+	<!-- 해당 회차 경기의 4등 인원수 -->
+	<select id="number_4_count" parameterClass="VictoryResultdto" resultClass="int">
+		select count(*)
+		from gamebuy
+		where league=#league# and turn2=#turn2# and result_rank=4
+	</select>
+	
+	<!-- 해당 회차 경기의 1등 배당금 업데이트 -->
+	<update id="number_1_price" parameterClass="map">
+		update gamebuy set result_price=#number_1_price# where league=#league# and turn2=#turn2# and result_rank=1
+	</update>
+	
+	<!-- 해당 회차 경기의 2등 배당금 업데이트 -->
+	<update id="number_2_price" parameterClass="map">
+		update gamebuy set result_price=#number_2_price# where league=#league# and turn2=#turn2# and result_rank=2
+	</update>
+	
+	<!-- 해당 회차 경기의 3등 배당금 업데이트 -->
+	<update id="number_3_price" parameterClass="map">
+		update gamebuy set result_price=#number_3_price# where league=#league# and turn2=#turn2# and result_rank=3
+	</update>
+	
+	<!-- 해당 회차 경기의 4등 배당금 업데이트 -->
+	<update id="number_4_price" parameterClass="map">
+		update gamebuy set result_price=#number_4_price# where league=#league# and turn2=#turn2# and result_rank=4
+	</update>
+
+	<!-- 구매한 결과 확인하기 08-10 -->
+	<select id="result_list" parameterClass="String" resultClass="VictoryPricedto">
+		select *
+		from gamebuy
+		where productnum = #productnum#
+	</select>
+	
+	<!-- 구매결과 확인 총액구할려고 -->
+	<select id="result_total_price" parameterClass="int" resultClass="gameVictorydto" >
+		select *
+		from gamevictory
+		where turn2=#round#
+	</select>
+	
+	<select id="totalcount_aa" parameterClass="map" resultClass="int">
+		select count(*)
+		from gamebuy
+		where id=#id# and turn2=#turn2#
+	</select>
+	
+	 <select id="cancelcount_aa" parameterClass="map" resultClass="int">
+		select count(*)
+		from gamebuy
+		where (id=#id# and turn2=#turn2# and refund=1) or (id=#id# and turn2=#turn2# and refund=2)
+	</select>
+	
+	<select id="totalprice_aa" parameterClass="map" resultClass="int">
+		select sum(price)
+		from gamebuy
+		where id=#id# and turn2=#turn2#
+	</select>
+	
+	 <select id="cancelprice_aa" parameterClass="map" resultClass="int">
+		select sum(price)
+		from gamebuy
+		where (id=#id# and turn2=#turn2# and refund=1) or (id=#id# and turn2=#turn2# and refund=2)
+	</select>
+</sqlMap>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="payDto" type="admin.payData" />
+	
+	<typeAlias alias="vpDto" type="gamevictory.victoryPriceData" />
+	
+	<typeAlias alias="pDto" type="proto.protoData" />
+	<!-- 리젙트 맵 정의 -->
+		<resultMap id="protoRes" class="pDto" >
+			<result property="type" column="type"/>
+			<result property="round" column="round"/>
+			<result property="bet" column="bet"/>
+			<result property="end_date" column="end_date"/>
+		</resultMap>
+	
+	<!-- 리절트 맵 정의 -->
+	  	<resultMap id="payRes" class="payDto">
+			<result property="num" column="num"/>
+			<result property="id" column="id"/>
+			<result property="price" column="price"/>
+			<result property="rstoreid" column="rstoreid"/>
+		    <result property="rapprno" column="rapprno"/>
+			<result property="rapprtm" column="rapprtm"/>
+			<result property="rdealno" column="rdealno"/>
+			<result property="pay_date" column="pay_date"/>
+			<result property="job" column="job"/>
+		</resultMap>
+		
+			<!-- 리절트 맵 정의 -->
+	  	<resultMap id="payRes2" class="payDto">
+		<result property="num" column="num"/>
+		<result property="id" column="id"/>
+		<result property="price" column="price"/>
+		<result property="pay_date" column="pay_date"/>
+		<result property="job" column="job"/>
+		</resultMap>
+	<insert id="payInsert" parameterClass="payDto">
+		insert into pay
+		values(
+			pay_seq.nextval,
+			#id#,
+			#price#,
+			#rstoreid#,
+			#rapprno#,
+			#rapprtm#,
+			#rdealno#,
+			sysdate,
+			#job#
+		)
+	</insert>
+		<!--내역  조회 -->
+		<select id="paycount" resultClass="int">
+			select count(*) from pay where id=#id#
+		</select>
+		
+	<!-- 내역 보여주기 보여준다. -->
+	<!-- <select id="paylist" resultMap="payRes" parameterClass="java.util.Map">
+			<![CDATA[
+		select num,id,price,rstoreid,rapprno,rapprtm,rdealno,pay_date,r 
+					from (select num,id,price,rstoreid,rapprno,rapprtm,rdealno,pay_date,rownum r 
+					from (select num,id,price,rstoreid,rapprno,rapprtm,rdealno,pay_date
+					from pay order by pay_date desc)) where r >=#startRow# and r <=#endRow# 
+		]]> 
+		</select> -->
+		<!-- 충전 내역 -->
+		<select id="searchpaylist" resultMap="payRes2" parameterClass="java.util.Map">
+			<![CDATA[
+			      select num,id,price,pay_date,job,r
+			from (select num,id,price,pay_date,job,rownum r
+			from (select num,id,price,pay_date,job
+			from pay where id=#id# and pay_date > #str# order by pay_date desc)) where r >=#startRow# and r <=#endRow# 
+		]]>
+		</select>
+		<!-- 메인페이지 충전내역 -->
+		<select id="intcash" parameterClass="String" resultClass="int">
+			select cash
+			from member
+			where id=#id#
+		</select>
+		
+		<!-- 관리자 Page(예치금 충전 내역) -->
+		<select id="adminPayListCount" resultClass="int">
+			select count(*) from pay
+		</select>
+		
+		<!-- 관리자 Page(예치금 충전 내역) -->
+		<select id="adminPayList" parameterClass="java.util.Map" resultClass="payDto" >
+			<![CDATA[
+				select id,price,pay_date,job,name,phone1,phone2,phone3,bank,account,r
+				from (select id,price,pay_date,job,name,phone1,phone2,phone3,bank,account,rownum r
+				from (select a.id id,a.price price,a.pay_date pay_date,a.job job,b.name name,b.phone1 phone1, b.phone2 phone2, b.phone3 phone3,b.bank bank, b.account account
+				from pay a,member b where a.id=b.id order by pay_date desc)) where r >=#startRow# and r <=#endRow# 
+			]]>
+		</select>
+		
+		<select id="total_cash" resultClass="int">
+			select sum(price) 
+			from pay
+		</select>
+		
+		<select id="total_cash_count" resultClass="int">
+			select count(*) 
+			from pay
+		</select>
+		
+		<select id="result_cash_ing" resultClass="int">
+			select sum(cancelprice) 
+			from paycancel
+			where flag=0
+		</select>
+		
+		<select id="result_cash_ing_count" resultClass="int">
+			select count(*) 
+			from paycancel
+			where flag=0
+		</select>
+		
+		<select id="result_cash" resultClass="int">
+			select sum(cancelprice) 
+			from paycancel
+			where flag=1
+		</select>
+		
+		<select id="result_cash_count" resultClass="int">
+			select count(*) 
+			from paycancel
+			where flag=1
+		</select>
+		
+		<select id="result_protoList" resultClass="vpDto">
+			<![CDATA[
+				select turn2,price,league,result_price,end_date
+				from (select a.turn2,sum(a.price) price,sum(a.result_price) result_price,a.league,b.end_date from gamebuy a,buygame b where a.turn2=b.round and a.league=b.league 
+				group by a.turn2,a.league,b.end_date order by sum(a.price) desc,a.turn2 desc)
+				where rownum < 6
+			]]>
+		</select>
+		
+		<select id="result_totoList" resultMap="protoRes">
+			<![CDATA[
+				select round,bet,type,end_date
+				from (select a.round,sum(a.bet) bet,a.type,b.end_date from protobet a,buygame b where a.type = b.type and a.round = b.round 
+				group by a.round,a.type,b.end_date order by sum(a.bet) desc,a.round desc)
+				where rownum < 6
+			]]>
+		</select>
+</sqlMap>
+

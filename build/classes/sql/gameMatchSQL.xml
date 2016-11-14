@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap>
+	<typeAlias alias="gameMatchdto" type="gameMatch.gameMatchData" />
+	<!-- 리절트 맵 정의 -->
+  	<resultMap id="dtoGameMatchRes" class="gameMatchdto">
+  		<result property="num" column="num"/>
+	  	<result property="matchpoint" column="matchpoint"/>
+	  	<result property="count" column="count"/>
+	</resultMap>
+	<insert id="soccerMatch" parameterClass="gameMatchdto">
+		insert into soccermatch(
+			num,
+			matchpoint,
+			soccermatch_reg_date		
+		)values(
+			#num#,
+			#matchpoint#,
+			sysdate
+		)
+	</insert>
+	<select id="soccerMatchView" parameterClass="int" resultClass="gameMatchdto">
+		select matchpoint,sum(count) count
+		from soccermatch
+		where num=#num#
+		group by matchpoint
+		order by matchpoint
+	</select>
+	
+	
+</sqlMap>
